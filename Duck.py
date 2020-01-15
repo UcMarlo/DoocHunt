@@ -19,6 +19,8 @@ class Duck(object):
 
     def tick(self):
         #TODO: create some "AI" logic
+
+        #TODO: duck can "bounce" of the vertical walls of the screen. I think they might also bounce of, of the other ducks
         return None
 
     def render(self):
