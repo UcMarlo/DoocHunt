@@ -8,15 +8,18 @@ class Game(object):
     def __init__(self):
         pygame.init()
 
-        self.SCREEN_HEIGHT = 500
-        self.SCREEN_WIDTH = 500
+        self.SCREEN_WIDTH = 800
+        self.SCREEN_HEIGHT = 600
 
-        self.display = pygame.display.set_mode((self.SCREEN_HEIGHT, self.SCREEN_WIDTH))
+        self.display = pygame.display.set_mode((self.SCREEN_WIDTH, self.SCREEN_HEIGHT))
         pygame.display.set_caption("DoocHunt")
 
         self.run = True
-        self.crosshair = Crosshair(self.display, self.SCREEN_HEIGHT, self.SCREEN_WIDTH)
+        self.crosshair = Crosshair(self.display, self.SCREEN_WIDTH, self.SCREEN_HEIGHT)
         self.ducks = []
+        self.groundImage = pygame.image.load("images/ground.png")
+        self.tree = pygame.image.load("images/tree.png")
+
 
     # TODO: it looks awful, is there a good looking switch case?
     def __handle_event(self, event):
@@ -39,11 +42,14 @@ class Game(object):
         return None
 
     def render_and_display_frame(self):
-        black = (0, 0, 0) #TODO: background
-        self.display.fill(black)
+        self.render_background()
         self.render_ducks()
         self.crosshair.render()
         pygame.display.update()
+
+    def render_background(self):
+        black = (80, 80, 130)  # TODO: background
+        self.display.fill(black)
 
     def spawn_duck(self):
         duck = Duck(self.display, 250, 250)
@@ -62,3 +68,10 @@ class Game(object):
     def render_ducks(self):
         for duck in self.ducks:
             duck.render()
+
+    def render_background(self):
+        blue = (60, 80, 150) #TODO: background
+        self.display.fill(blue)
+        rect = self.groundImage.get_rect()
+        self.display.blit(self.groundImage, (0, self.SCREEN_HEIGHT - rect.height ))
+        return None
