@@ -1,6 +1,9 @@
+from enum import Enum
+
 import pygame
 from Crosshair import Crosshair
 from Duck import Duck
+from Stoper import Stoper
 from AnimalSprites import DuckSprite
 
 
@@ -14,7 +17,8 @@ class Game(object):
 
         self.display = pygame.display.set_mode((self.SCREEN_WIDTH, self.SCREEN_HEIGHT))
         pygame.display.set_caption("DoocHunt")
-    
+        self.stoper = Stoper()
+
     #################
         self.oldTime= pygame.time.get_ticks()
         self.kierunek = 1
@@ -65,7 +69,7 @@ class Game(object):
 
         self.duck13 = DuckSprite( "brown" , "up" , 0 )
         self.duck13.setNewPosition( 500+40 , 300 )
-        
+
         self.ducksS = pygame.sprite.Group()
         self.ducksS.add(self.duck1)
         self.ducksS.add(self.duck2)
@@ -92,8 +96,10 @@ class Game(object):
             print("mouse: ", mx, my)
 
     def main_loop(self):
+        self.setup_round(1)
         #TODO: prepare scene before main loop
         while self.run:
+            dt = self.stoper
             self.crosshair.move(pygame.mouse.get_pos())
 
             for event in pygame.event.get():
@@ -107,7 +113,7 @@ class Game(object):
         self.render_background()
         self.render_ducks()
         self.crosshair.render()
-        
+
         self.ducksS.update()
         self.ducksS.draw(self.display)
 
@@ -118,24 +124,24 @@ class Game(object):
         self.display.fill(black)
 
     def spawn_duck(self):
-        duck = Duck(self.display, 250, 250)
+        duck = Duck(self.display, self.stoper, (250,250), pygame.image.load("images/duck.jpg"))
         self.ducks.append(duck)
 
 
     #TODO: theres a good place to setup a state machine - e.g. STARTING_TURN, TURN, WON_TURN, LOST_TURN etc.
     def tick(self):
-        
+
         if ( pygame.time.get_ticks() - self.oldTime) > 100 :
-            
+
             for duck in self.ducksS:
                 duck.nextFrame()
 
-            
 
-            self.duck1.move(5 * self.kierunek ,0) 
-            self.duck2.move(-5 * self.kierunek ,0) 
-            self.duck3.move(-5 * self.kierunek ,-5 * self.kierunek) 
-            self.duck4.move(+5 * self.kierunek ,+5 * self.kierunek) 
+
+            self.duck1.move(5 * self.kierunek ,0)
+            self.duck2.move(-5 * self.kierunek ,0)
+            self.duck3.move(-5 * self.kierunek ,-5 * self.kierunek)
+            self.duck4.move(+5 * self.kierunek ,+5 * self.kierunek)
 
             self.oldTime = pygame.time.get_ticks()
 
@@ -149,7 +155,6 @@ class Game(object):
                     duck.reverseDirection()
 
         self.execute_ducks_logic()
-        
         pass
 
     def execute_ducks_logic(self):
@@ -158,11 +163,22 @@ class Game(object):
 
     def render_ducks(self):
         for duck in self.ducks:
-            duck.render()        
+            duck.render()
 
     def render_background(self):
         blue = (60, 80, 150) #TODO: background
         self.display.fill(blue)
         rect = self.groundImage.get_rect()
         self.display.blit(self.groundImage, (0, self.SCREEN_HEIGHT - rect.height ))
+        return None
+
+    class GameState(Enum):
+        STARTING = 0
+        ROUND_START = 1
+        ACTIVE_GAME = 2
+        ROUND_END = 3
+        GAME_END = 4
+
+    def setup_round(self, level):
+        self.spawn_duck()
         return None

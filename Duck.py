@@ -1,19 +1,18 @@
 import pygame
 from enum import Enum
 
-class Duck(object):
+from GameObject import GameObject
+
+
+class Duck(GameObject):
 
     #TODO: make it use sprites instead of image
-    def __init__(self, display, startingX, startingY):
+    def __init__(self, display, stoper, position, image):
+        super().__init__(display, stoper, position, image)
         self.gameDisplay = display
-        self.position = (startingX, startingY)
-        self.image = pygame.image.load("images/duck.jpg")
-        #self.image = pygame.transform.rotozoom(self.image, 0, 0.1)
         self.imageCenterX = self.image.get_height() / 2
         self.imageCenterY = self.image.get_width() / 2
         self.duckState = DuckState.FLYING
-
-
 
     def move(self, pos):
         x,y = pos
