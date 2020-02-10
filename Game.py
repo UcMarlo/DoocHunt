@@ -131,10 +131,8 @@ class Game(object):
     #TODO: theres a good place to setup a state machine - e.g. STARTING_TURN, TURN, WON_TURN, LOST_TURN etc.
     def tick(self):
 
-        if ( pygame.time.get_ticks() - self.oldTime) > 100 :
-
-            for duck in self.ducksS:
-                duck.nextFrame()
+        for duck in self.ducksS:
+            duck.nextFrame()
 
 
 

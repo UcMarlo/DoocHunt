@@ -1,33 +1,69 @@
+from enum import Enum
 import pygame
 
+class DuckColor(Enum):
+    BLUE = "blue"
+    BLACK = "black"
+    BROWN = "brown"
+
+class DuckAnimationState(Enum):
+    FALLING = "falling"
+    HIT = "hit"
+    HORIZONTAL = "horizontal"
+    DIAGONAL = "diagonal"
+    UP = "up"
+
+class DuckDirection(Enum):
+    RIGHT = "right",
+    LEFT = "left"
+
 MAX_DUCK_ANIMATION_FRAMES = 3
-colors = ("blue","black","brown")
-duck_physical_states = ("fall","hit","right","right_up","up")
-duck_virtual_states = ("left", "left_up")
-duck_states = duck_physical_states + duck_virtual_states
-frameles_states = ("fall","hit")
 
-PLACE_HOLDER = "images/error.png"
+class DuckSpriteSetRepository(object):
+    def __init__(self):
+        self.duckSpriteDictionary = self._prepareMap()
 
+    def _prepareMap(self):
+        duckSpriteDict = {}
+        duckSpriteDict[DuckColor.BLUE] = self._prepareSpriteMapForColor(DuckColor.BLUE)
+        duckSpriteDict[DuckColor.BLACK] = self._prepareSpriteMapForColor(DuckColor.BLACK)
+        duckSpriteDict[DuckColor.BROWN] = self._prepareSpriteMapForColor(DuckColor.BROWN)
+        return duckSpriteDict
 
-def getImageOfDuck( color , state , frame):
-    rotate = 0
-    pathToFile = PLACE_HOLDER
-    if (color in colors) and (state in duck_states) and (frame < MAX_DUCK_ANIMATION_FRAMES):
-        if state in duck_virtual_states:
-            rotate = 1
-            if state == "left":
-                state = "right"
-            elif state == "left_up":
-                state = "right_up"
-        if state in frameles_states:
-            frame = 0
-        pathToFile = "images/" + color + "_duck/" + state + "_" + str(frame+1) + ".gif"
-    
-    image = pygame.image.load(pathToFile).convert()
-    if rotate:
-        image = pygame.transform.flip(image , 1 , 0)
-    return image
+    def _prepareOneFrameCollection(self, duckColor, duckAnimationSet):
+        filePath = "images/" + duckColor + "_duck/" + duckAnimationSet + ".gif"
+        return [pygame.image.load(filePath).convert()]
+
+    def _prepareAnimationCollection(self, duckColor, duckAnimationSet, imageCount):
+        collection = []
+        for i in range(imageCount):
+            filePath = "images/" + duckColor + "_duck/" + duckAnimationSet + "_" + str(i) + ".gif"
+            collection.append(pygame.image.load(filePath).convert())
+        return collection
+
+    def _prepareSpriteMapForColor(self, duckColor):
+        spriteCollection = {}
+        spriteCollection[DuckAnimationState.FALLING] = self._prepareOneFrameCollection(duckColor, DuckAnimationState.FALLING)
+        spriteCollection[DuckAnimationState.HIT] = self._prepareOneFrameCollection(duckColor, DuckAnimationState.HIT)
+        spriteCollection[DuckAnimationState.HORIZONTAL] = self._prepareAnimationCollection(duckColor, DuckAnimationState.HORIZONTAL, 3)
+        spriteCollection[DuckAnimationState.DIAGONAL] = self._prepareAnimationCollection(duckColor, DuckAnimationState.HORIZONTAL, 3)
+        spriteCollection[DuckAnimationState.UP] = self._prepareAnimationCollection(duckColor, DuckAnimationState.HORIZONTAL, 3)
+        return spriteCollection
+
+class RepeatingSpriteSet(object):
+    def __init__(self, frames):
+        self.frames = frames
+        self.currentFrameIndex = 0
+        self.animationIncrement = 1
+        self.maxFrames = len(frames)
+
+    def getFrame(self):
+        return self.frames[self.currentFrameIndex]
+
+    def nextFrame(self):
+        if self.currentFrameIndex == self.maxFrames or self.currentFrameIndex == 0:
+            self.animationIncrement = -self.animationIncrement
+        self.currentFrameIndex += self.animationIncrement
 
 
 
@@ -46,7 +82,6 @@ class DuckSprite(pygame.sprite.Sprite):
 
     def updateImage(self):
         self.image = getImageOfDuck( self.color , self.state , self.animationFrame )
-    #    self.rect = self.image.get_rect()
 
     def nextFrame(self):
         self.animationFrame += 1
