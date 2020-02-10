@@ -1,6 +1,10 @@
+from enum import Enum
+
 import pygame
 from Crosshair import Crosshair
 from Duck import Duck
+from Stoper import Stoper
+from DuckHuntSprites import DuckSpriteSetRepository, DuckColor
 
 
 class Game(object):
@@ -13,13 +17,13 @@ class Game(object):
 
         self.display = pygame.display.set_mode((self.SCREEN_WIDTH, self.SCREEN_HEIGHT))
         pygame.display.set_caption("DoocHunt")
-
+        self.stoper = Stoper()
         self.run = True
         self.crosshair = Crosshair(self.display, self.SCREEN_WIDTH, self.SCREEN_HEIGHT)
         self.ducks = []
         self.groundImage = pygame.image.load("images/ground.png")
         self.tree = pygame.image.load("images/tree.png")
-
+        self.duckSpriteRepository = DuckSpriteSetRepository()
 
     # TODO: it looks awful, is there a good looking switch case?
     def __handle_event(self, event):
@@ -30,8 +34,10 @@ class Game(object):
             print("mouse: ", mx, my)
 
     def main_loop(self):
+        self.setup_round(1)
         #TODO: prepare scene before main loop
         while self.run:
+            dt = self.stoper
             self.crosshair.move(pygame.mouse.get_pos())
 
             for event in pygame.event.get():
@@ -52,7 +58,7 @@ class Game(object):
         self.display.fill(black)
 
     def spawn_duck(self):
-        duck = Duck(self.display, 250, 250)
+        duck = Duck(self.display, self.stoper, (250,250), self.duckSpriteRepository.getCollectionForColor(DuckColor.BROWN))
         self.ducks.append(duck)
 
 
@@ -74,4 +80,15 @@ class Game(object):
         self.display.fill(blue)
         rect = self.groundImage.get_rect()
         self.display.blit(self.groundImage, (0, self.SCREEN_HEIGHT - rect.height ))
+        return None
+
+    class GameState(Enum):
+        STARTING = 0
+        ROUND_START = 1
+        ACTIVE_GAME = 2
+        ROUND_END = 3
+        GAME_END = 4
+
+    def setup_round(self, level):
+        self.spawn_duck()
         return None
