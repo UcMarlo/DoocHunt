@@ -4,7 +4,7 @@ import pygame
 from Crosshair import Crosshair
 from Duck import Duck
 from Stoper import Stoper
-from AnimalSprites import DuckSprite
+from DuckHuntSprites import DuckSpriteSetRepository, DuckColor
 
 
 class Game(object):
@@ -18,74 +18,12 @@ class Game(object):
         self.display = pygame.display.set_mode((self.SCREEN_WIDTH, self.SCREEN_HEIGHT))
         pygame.display.set_caption("DoocHunt")
         self.stoper = Stoper()
-
-    #################
-        self.oldTime= pygame.time.get_ticks()
-        self.kierunek = 1
-        self.i = 0
-    ##################
-
         self.run = True
         self.crosshair = Crosshair(self.display, self.SCREEN_WIDTH, self.SCREEN_HEIGHT)
         self.ducks = []
         self.groundImage = pygame.image.load("images/ground.png")
         self.tree = pygame.image.load("images/tree.png")
-
-        self.duck1 = DuckSprite( "black" , "right" , 0 )
-        self.duck1.setNewPosition( 400 , 300 )
-
-        self.duck2 = DuckSprite( "blue" , "left" , 1 )
-        self.duck2.setNewPosition( 100 , 100 )
-
-        self.duck3 = DuckSprite( "brown" , "left_up" , 0 )
-        self.duck3.setNewPosition( 500 , 400 )
-
-        self.duck4 = DuckSprite( "brown" , "right_up" , 0 )
-        self.duck4.setNewPosition( 100 , 400 )
-
-        self.duck5 = DuckSprite( "black" , "fall" , 0 )
-        self.duck5.setNewPosition( 200 , 200 )
-
-        self.duck6 = DuckSprite( "blue" , "fall" , 0 )
-        self.duck6.setNewPosition( 200+20 , 200 )
-
-        self.duck7 = DuckSprite( "brown" , "fall" , 0 )
-        self.duck7.setNewPosition( 200+40 , 200 )
-
-        self.duck8 = DuckSprite( "black" , "hit" , 0 )
-        self.duck8.setNewPosition( 200 , 300 )
-
-        self.duck9 = DuckSprite( "blue" , "hit" , 0 )
-        self.duck9.setNewPosition( 200+20 , 300 )
-
-        self.duck10 = DuckSprite( "brown" , "hit" , 0 )
-        self.duck10.setNewPosition( 200+40 , 300 )
-
-        self.duck11 = DuckSprite( "black" , "up" , 0 )
-        self.duck11.setNewPosition( 500 , 300 )
-
-        self.duck12 = DuckSprite( "blue" , "up" , 0 )
-        self.duck12.setNewPosition( 500+20 , 300 )
-
-        self.duck13 = DuckSprite( "brown" , "up" , 0 )
-        self.duck13.setNewPosition( 500+40 , 300 )
-
-        self.ducksS = pygame.sprite.Group()
-        self.ducksS.add(self.duck1)
-        self.ducksS.add(self.duck2)
-        self.ducksS.add(self.duck3)
-        self.ducksS.add(self.duck4)
-        self.ducksS.add(self.duck5)
-        self.ducksS.add(self.duck6)
-        self.ducksS.add(self.duck7)
-        self.ducksS.add(self.duck8)
-        self.ducksS.add(self.duck9)
-        self.ducksS.add(self.duck10)
-        self.ducksS.add(self.duck11)
-        self.ducksS.add(self.duck12)
-        self.ducksS.add(self.duck13)
-        self.ducksS.update()
-
+        self.duckSpriteRepository = DuckSpriteSetRepository()
 
     # TODO: it looks awful, is there a good looking switch case?
     def __handle_event(self, event):
@@ -113,10 +51,6 @@ class Game(object):
         self.render_background()
         self.render_ducks()
         self.crosshair.render()
-
-        self.ducksS.update()
-        self.ducksS.draw(self.display)
-
         pygame.display.update()
 
     def render_background(self):
@@ -124,34 +58,12 @@ class Game(object):
         self.display.fill(black)
 
     def spawn_duck(self):
-        duck = Duck(self.display, self.stoper, (250,250), pygame.image.load("images/duck.jpg"))
+        duck = Duck(self.display, self.stoper, (250,250), self.duckSpriteRepository.getCollectionForColor(DuckColor.BROWN))
         self.ducks.append(duck)
 
 
     #TODO: theres a good place to setup a state machine - e.g. STARTING_TURN, TURN, WON_TURN, LOST_TURN etc.
     def tick(self):
-
-        for duck in self.ducksS:
-            duck.nextFrame()
-
-
-
-            self.duck1.move(5 * self.kierunek ,0)
-            self.duck2.move(-5 * self.kierunek ,0)
-            self.duck3.move(-5 * self.kierunek ,-5 * self.kierunek)
-            self.duck4.move(+5 * self.kierunek ,+5 * self.kierunek)
-
-            self.oldTime = pygame.time.get_ticks()
-
-            self.i += 1
-
-            if self.i > 30:
-                self.i = 0
-                self.kierunek *= -1
-
-                for duck in self.ducksS:
-                    duck.reverseDirection()
-
         self.execute_ducks_logic()
         pass
 

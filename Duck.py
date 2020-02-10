@@ -2,23 +2,28 @@ import pygame
 from enum import Enum
 
 from GameObject import GameObject
-
+from DuckHuntSprites import DuckAnimationState
 
 class Duck(GameObject):
 
     #TODO: make it use sprites instead of image
-    def __init__(self, display, stoper, position, image):
-        super().__init__(display, stoper, position, image)
+    def __init__(self, display, stoper, position, spriteMap):
+        super().__init__(display, stoper, position, None)
         self.gameDisplay = display
-        self.imageCenterX = self.image.get_height() / 2
-        self.imageCenterY = self.image.get_width() / 2
         self.duckState = DuckState.FLYING
+        self.spriteMap = spriteMap
+        self.currentImageSet = self.spriteMap[DuckAnimationState.HORIZONTAL]
+        self.imageCenterY = 16 #self.image.get_width() / 2 TODO: calcualte it somehow
+        self.imageCenterX = 16 #self.image.get_height() / 2
+        self.image = self.currentImageSet.getFrame()
 
     def move(self, pos):
         x,y = pos
         self.mousePosition = (x - self.imageCenterX), (y - self.imageCenterY)
 
     def tick(self):
+        self.currentImageSet.nextFrame()
+        self.image = self.currentImageSet.getFrame()
         #TODO: create some "AI" logic
 
         #TODO: duck can "bounce" of the vertical walls of the screen. I think they might also bounce of, of the other ducks
@@ -58,9 +63,6 @@ class Duck(GameObject):
     def escaped(self):
         # Terminal status nothing to see here - removes tries
         return None
-
-    def render(self):
-        self.gameDisplay.blit(self.image, self.position)
 
     def check_for_colision(self):
 
