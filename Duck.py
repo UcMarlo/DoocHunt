@@ -1,5 +1,7 @@
 import pygame
+import math
 from enum import Enum
+from random import randint
 
 from GameObject import GameObject
 from DuckHuntSprites import DuckAnimationState
@@ -7,8 +9,8 @@ from DuckHuntSprites import DuckAnimationState
 class Duck(GameObject):
 
     #TODO: make it use sprites instead of image
-    def __init__(self, display, stoper, position, spriteMap):
-        super().__init__(display, stoper, position, None)
+    def __init__(self, display, stoper, positionVector, spriteMap):
+        super().__init__(display, stoper, positionVector)
         self.gameDisplay = display
         self.duckState = DuckState.FLYING
         self.spriteMap = spriteMap
@@ -19,21 +21,21 @@ class Duck(GameObject):
         #Animation Stuff
         self.animationIntervalInMs = 100
         self.lastAnimationUpdate = 0
+        # movement speed
+        self.movementSpeed = 0.1
+        self.angle = 0
+        self.setRandomAngle()
 
-
-    def move(self, pos):
-        x,y = pos
-        self.mousePosition = (x - self.imageCenterX), (y - self.imageCenterY)
-
-    def _changeAnimationFrame(self):
-        if self.stoper.getCurrentTicks() - self.lastAnimationUpdate > self.animationIntervalInMs:
-            self.currentImageSet.nextFrame()
-            self.lastAnimationUpdate = self.stoper.getCurrentTicks()
-            self.image = self.currentImageSet.getFrame()
-
+    def render(self):
+        if (self.renderable):
+            if(self.directionVector.x < 0):
+                self.gameDisplay.blit(pygame.transform.flip(self.image, True, False), self.positionVector)
+            else:
+                self.gameDisplay.blit(self.image, self.positionVector)
+        return None
 
     def tick(self):
-        self._changeAnimationFrame()
+        super().tick()
         #TODO: create some "AI" logic
 
         #TODO: duck can "bounce" of the vertical walls of the screen. I think they might also bounce of, of the other ducks
@@ -55,7 +57,7 @@ class Duck(GameObject):
         return None
 
     def flying(self):
-        # TODO: duck should fly in random directions
+        self.performTimeSynchronizedMove()
         return None
 
     def dead(self):
@@ -76,6 +78,22 @@ class Duck(GameObject):
 
     def check_for_colision(self):
 
+        return None
+
+    def performTimeSynchronizedMove(self):
+        self.positionVector.x += self.movementSpeed * self.stoper.getDetla() * self.directionVector.x
+        self.positionVector.y += self.movementSpeed * self.stoper.getDetla() * self.directionVector.y
+
+        return None
+
+    def setRandomAngle(self):
+        self.setDirectionFromAngle(randint(0, 360))
+
+    def setDirectionFromAngle(self, angle):
+        rads = math.radians(angle)
+        x = math.cos(rads)
+        y = math.sin(rads)
+        self.directionVector = pygame.Vector2(x, y)
         return None
 
 class DuckState(Enum):
