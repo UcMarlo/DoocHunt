@@ -5,7 +5,7 @@ from Crosshair import Crosshair
 from Duck import Duck
 from Stoper import Stoper
 from DuckHuntSprites import DuckSpriteSetRepository, DuckColor
-
+from Sound import Sound, Sounds
 
 class Game(object):
 
@@ -17,7 +17,9 @@ class Game(object):
 
         self.display = pygame.display.set_mode((self.SCREEN_WIDTH, self.SCREEN_HEIGHT))
         pygame.display.set_caption("DoocHunt")
+        pygame.mouse.set_visible(False)
         self.stoper = Stoper()
+        self.sound = Sound()
         self.run = True
         self.crosshair = Crosshair(self.display, self.SCREEN_WIDTH, self.SCREEN_HEIGHT)
         self.ducks = []
@@ -32,6 +34,7 @@ class Game(object):
         if event.type == pygame.MOUSEBUTTONDOWN:
             mx, my = pygame.mouse.get_pos()
             print("mouse: ", mx, my)
+            self.sound.play(Sounds.SzczekTwo)
 
     def main_loop(self):
         self.setup_round(1)
