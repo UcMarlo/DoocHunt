@@ -15,6 +15,7 @@ class Duck(GameObject):
         self.duckState = DuckState.FLYING
         self.spriteMap = spriteMap
         self.currentImageSet = self.spriteMap[DuckAnimationState.HORIZONTAL]
+        self.duckAnimationState = DuckAnimationState.HORIZONTAL
         # TODO: calculate it somehow
         self.imageCenterY = 16
         self.imageCenterX = 16
@@ -32,9 +33,8 @@ class Duck(GameObject):
 
     def render(self):
         if (self.renderable):
-            # should we check animation state ?
             horizontalFlip = self.directionVector.x < 0
-            verticalFlip = self.directionVector.y > 0
+            verticalFlip = self.directionVector.y > 0 and (self.duckAnimationState == DuckAnimationState.UP)
             self.gameDisplay.blit(pygame.transform.flip(self.image, horizontalFlip, verticalFlip), self.positionVector)
         return None
 
@@ -108,10 +108,13 @@ class Duck(GameObject):
     def setDirectionFromAngle(self, angle):
         if 80 <= angle <= 100 or 260 <= angle <= 280:
             self.currentImageSet = self.spriteMap[DuckAnimationState.UP]
+            self.duckAnimationState = DuckAnimationState.UP
         if 0 <= angle <= 30 or 160 <= angle <= 210 or 330 <= angle <= 0:
             self.currentImageSet = self.spriteMap[DuckAnimationState.HORIZONTAL]
+            self.duckAnimationState = DuckAnimationState.HORIZONTAL
         if 30 <= angle <= 80 or 110 <= angle <= 150 or 210 <= angle <= 250 or 270 <= angle <= 330:
             self.currentImageSet = self.spriteMap[DuckAnimationState.DIAGONAL]
+            self.duckAnimationState = DuckAnimationState.DIAGONAL
         rads = math.radians(angle)
         x = math.cos(rads)
         y = math.sin(rads)
