@@ -21,11 +21,11 @@ class Sound:
         pygame.mixer.init(44100, -16, 2, 2048)
         pygame.mixer.set_num_channels(len(Sounds.__members__))
 
-    def play(self, sound, loops=0):
+    @staticmethod
+    def play(sound):
         """Play given sound, takes only Sounds enum as a parameter.
 
         :param Sounds sound: Sounds enumerator.
-        :param int loops: how many times repeat the sound.
 
         """
         if not isinstance(sound, Sounds):
