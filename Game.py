@@ -58,9 +58,7 @@ class Game(object):
         self.display.fill(black)
 
     def spawn_duck(self):
-        duck = Duck(self.display, self.stoper, pygame.Vector2(250, 250), self.duckSpriteRepository.getCollectionForColor(DuckColor.BROWN))
-        self.ducks.append(duck)
-
+        self.ducks.append(Duck(self.display, self.stoper, pygame.Vector2(250, 250), self.duckSpriteRepository.getCollectionForColor(DuckColor.BROWN)))
 
     #TODO: theres a good place to setup a state machine - e.g. STARTING_TURN, TURN, WON_TURN, LOST_TURN etc.
     def tick(self):

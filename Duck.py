@@ -26,6 +26,13 @@ class Duck(GameObject):
         self.angle = 0
         self.setRandomAngle()
 
+    def render(self):
+        if (self.renderable):
+            if(self.directionVector.x < 0):
+                self.gameDisplay.blit(pygame.transform.flip(self.image, True, False), self.positionVector)
+            else:
+                self.gameDisplay.blit(self.image, self.positionVector)
+        return None
 
     def tick(self):
         super().tick()
@@ -87,6 +94,7 @@ class Duck(GameObject):
         x = math.cos(rads)
         y = math.sin(rads)
         self.directionVector = pygame.Vector2(x, y)
+        return None
 
 class DuckState(Enum):
     FLYING = 0
