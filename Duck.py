@@ -2,6 +2,7 @@ import pygame
 import math
 from enum import Enum
 from random import randint
+from Sound import Sound,Sounds
 
 from GameObject import GameObject
 from DuckHuntSprites import DuckAnimationState
@@ -29,6 +30,8 @@ class Duck(GameObject):
         self.setRandomAngle()
         self.lastDirectionChange = 0
         self.flyingDirectionChangeThreshold = randint(1000, 5000)
+        self.quackingThreshold = randint(1000, 15000)
+        self.lastQuacked = 0
 
 
     def render(self):
@@ -53,6 +56,7 @@ class Duck(GameObject):
             self.shot()
 
         if self.duckState == DuckState.ESCAPING:
+            # TODO: while escaping play quackityquacktillion of quacks
             self.escaping()
 
         if self.duckState == DuckState.ESCAPED:
@@ -68,6 +72,10 @@ class Duck(GameObject):
             self.setRandomAngle()
             self.lastDirectionChange = self.stoper.getCurrentTicks()
             self.flyingDirectionChangeThreshold = randint(1000, 5000)
+        if self.stoper.getCurrentTicks() - self.lastQuacked > self.quackingThreshold:
+            Sound.play(Sounds.Quack)
+            self.quackingThreshold = randint(1000, 8000)
+            self.lastQuacked = self.stoper.getCurrentTicks()
 
     def dead(self):
         # Terminal status nothing to see here - grants points
