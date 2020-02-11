@@ -34,7 +34,7 @@ class Game(object):
         if event.type == pygame.MOUSEBUTTONDOWN:
             mx, my = pygame.mouse.get_pos()
             print("mouse: ", mx, my)
-            self.sound.play(Sounds.SzczekTwo)
+            self.sound.play(Sounds.GunShot)
 
     def main_loop(self):
         self.setup_round(1)
