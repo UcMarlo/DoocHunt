@@ -16,14 +16,24 @@ class Duck(GameObject):
         self.imageCenterY = 16 #self.image.get_width() / 2 TODO: calcualte it somehow
         self.imageCenterX = 16 #self.image.get_height() / 2
         self.image = self.currentImageSet.getFrame()
+        #Animation Stuff
+        self.animationIntervalInMs = 100
+        self.lastAnimationUpdate = 0
+
 
     def move(self, pos):
         x,y = pos
         self.mousePosition = (x - self.imageCenterX), (y - self.imageCenterY)
 
+    def _changeAnimationFrame(self):
+        if self.stoper.getCurrentTicks() - self.lastAnimationUpdate > self.animationIntervalInMs:
+            self.currentImageSet.nextFrame()
+            self.lastAnimationUpdate = self.stoper.getCurrentTicks()
+            self.image = self.currentImageSet.getFrame()
+
+
     def tick(self):
-        self.currentImageSet.nextFrame()
-        self.image = self.currentImageSet.getFrame()
+        self._changeAnimationFrame()
         #TODO: create some "AI" logic
 
         #TODO: duck can "bounce" of the vertical walls of the screen. I think they might also bounce of, of the other ducks

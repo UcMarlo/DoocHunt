@@ -37,7 +37,7 @@ class Game(object):
         self.setup_round(1)
         #TODO: prepare scene before main loop
         while self.run:
-            dt = self.stoper
+            self.stoper.newTick()
             self.crosshair.move(pygame.mouse.get_pos())
 
             for event in pygame.event.get():
