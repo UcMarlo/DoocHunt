@@ -58,7 +58,7 @@ class Game(object):
         self.display.fill(black)
 
     def spawn_duck(self):
-        duck = Duck(self.display, self.stoper, (250,250), self.duckSpriteRepository.getCollectionForColor(DuckColor.BROWN))
+        duck = Duck(self.display, self.stoper, pygame.Vector2(250, 250), self.duckSpriteRepository.getCollectionForColor(DuckColor.BROWN))
         self.ducks.append(duck)
 
 
