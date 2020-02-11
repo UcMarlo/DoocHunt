@@ -48,8 +48,8 @@ class DuckSpriteSetRepository(object):
         spriteMap[DuckAnimationState.FALLING] = self._prepareOneFrameCollection(duckColor, DuckAnimationState.FALLING)
         spriteMap[DuckAnimationState.HIT] = self._prepareOneFrameCollection(duckColor, DuckAnimationState.HIT)
         spriteMap[DuckAnimationState.HORIZONTAL] = self._prepareAnimationCollection(duckColor, DuckAnimationState.HORIZONTAL, 3)
-        spriteMap[DuckAnimationState.DIAGONAL] = self._prepareAnimationCollection(duckColor, DuckAnimationState.HORIZONTAL, 3)
-        spriteMap[DuckAnimationState.UP] = self._prepareAnimationCollection(duckColor, DuckAnimationState.HORIZONTAL, 3)
+        spriteMap[DuckAnimationState.DIAGONAL] = self._prepareAnimationCollection(duckColor, DuckAnimationState.DIAGONAL, 3)
+        spriteMap[DuckAnimationState.UP] = self._prepareAnimationCollection(duckColor, DuckAnimationState.UP, 3)
         return spriteMap
 
     def _prepareFourFrameAnimationFromThreeFrames(self, frames):
