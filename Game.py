@@ -4,7 +4,7 @@ import pygame
 from Crosshair import Crosshair
 from Duck import Duck
 from Stoper import Stoper
-from DuckHuntSprites import DuckSpriteSetRepository, DuckColor
+from DuckHuntSprites import DuckSpriteSetRepository, DuckColor, DogSpriteSetRepository
 
 
 class Game(object):
@@ -24,6 +24,8 @@ class Game(object):
         self.groundImage = pygame.image.load("images/ground.png")
         self.tree = pygame.image.load("images/tree.png")
         self.duckSpriteRepository = DuckSpriteSetRepository()
+        self.dogSpriteSetRepository = DogSpriteSetRepository()
+
 
     # TODO: it looks awful, is there a good looking switch case?
     def __handle_event(self, event):
