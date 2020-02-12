@@ -13,9 +13,24 @@ class DuckAnimationState(Enum):
     DIAGONAL = "diagonal"
     UP = "up"
 
+class DogAnimationState(Enum):
+    HOLD_ONE = "holdOne"
+    HOLD_TWO = "holdTwo"
+    JUMP = "jump"
+    LAUGHING = "laughing"
+    SNIFF = "sniff"    
+
 class DuckDirection(Enum):
     RIGHT = "right",
     LEFT = "left"
+
+MAX_DOG_ANIMATION_FRAMES = {
+    DogAnimationState.HOLD_ONE : 1,
+    DogAnimationState.HOLD_TWO : 1,
+    DogAnimationState.JUMP : 3,
+    DogAnimationState.LAUGHING : 2,
+    DogAnimationState.SNIFF : 5
+}
 
 MAX_DUCK_ANIMATION_FRAMES = 3
 
@@ -63,6 +78,34 @@ class DuckSpriteSetRepository(object):
             DuckAnimationState.HORIZONTAL: RepeatingSpriteSet(self._prepareFourFrameAnimationFromThreeFrames(dict[DuckAnimationState.HORIZONTAL])),
             DuckAnimationState.DIAGONAL: RepeatingSpriteSet(self._prepareFourFrameAnimationFromThreeFrames(dict[DuckAnimationState.DIAGONAL])),
             DuckAnimationState.UP: RepeatingSpriteSet(self._prepareFourFrameAnimationFromThreeFrames(dict[DuckAnimationState.UP]))
+        }
+
+class DogSpriteSetRepository(object):
+    def __init__(self):
+        self.dogSpriteDictionary = self._prepareMap()
+
+    def _prepareMap(self):
+        dogSpriteDict = {}  
+        for dogState in DogAnimationState:
+            dogSpriteDict[dogState] = self._prepareAnimationCollection(dogState , MAX_DOG_ANIMATION_FRAMES[dogState] )
+        return dogSpriteDict
+
+    def _prepareAnimationCollection(self, dogAnimationSet, imageCount):
+        collection = []
+        for i in range(1, imageCount + 1):
+            filePath = "images/dog/" + dogAnimationSet.value + "_" + str(i) + ".gif"
+            collection.append(pygame.image.load(filePath).convert())
+        return collection
+    
+    # TODO: make it blit images for
+    def getCollection(self):
+        dict = self.dogSpriteDictionary
+        return {
+            DogAnimationState.HOLD_ONE: RepeatingSpriteSet(dict[DogAnimationState.HOLD_ONE]),
+            DogAnimationState.HOLD_TWO: RepeatingSpriteSet(dict[DogAnimationState.HOLD_TWO]),
+            DogAnimationState.JUMP: RepeatingSpriteSet(dict[DogAnimationState.JUMP]),
+            DogAnimationState.LAUGHING: RepeatingSpriteSet(dict[DogAnimationState.LAUGHING]),
+            DogAnimationState.SNIFF: RepeatingSpriteSet(dict[DogAnimationState.SNIFF])
         }
 
 class RepeatingSpriteSet(object):
