@@ -63,14 +63,13 @@ class DuckSpriteSetRepository(object):
         spriteMap[DuckAnimationState.FALLING] = self._prepareOneFrameCollection(duckColor, DuckAnimationState.FALLING)
         spriteMap[DuckAnimationState.HIT] = self._prepareOneFrameCollection(duckColor, DuckAnimationState.HIT)
         spriteMap[DuckAnimationState.HORIZONTAL] = self._prepareAnimationCollection(duckColor, DuckAnimationState.HORIZONTAL, 3)
-        spriteMap[DuckAnimationState.DIAGONAL] = self._prepareAnimationCollection(duckColor, DuckAnimationState.HORIZONTAL, 3)
-        spriteMap[DuckAnimationState.UP] = self._prepareAnimationCollection(duckColor, DuckAnimationState.HORIZONTAL, 3)
+        spriteMap[DuckAnimationState.DIAGONAL] = self._prepareAnimationCollection(duckColor, DuckAnimationState.DIAGONAL, 3)
+        spriteMap[DuckAnimationState.UP] = self._prepareAnimationCollection(duckColor, DuckAnimationState.UP, 3)
         return spriteMap
 
     def _prepareFourFrameAnimationFromThreeFrames(self, frames):
         return [frames[0],frames[1],frames[2],frames[1]]
 
-    # TODO: make it blit images for
     def getCollectionForColor(self, duckColor):
         dict = self.duckSpriteDictionary[duckColor]
         return {
@@ -113,13 +112,13 @@ class RepeatingSpriteSet(object):
     def __init__(self, frames):
         self.frames = frames
         self.currentFrameIndex = 0
-        self.animationIncrement = 1
         self.maxFrames = len(frames) - 1
 
     def getFrame(self):
         return self.frames[self.currentFrameIndex]
 
     def nextFrame(self):
-        self.currentFrameIndex += self.animationIncrement
-        if self.currentFrameIndex == self.maxFrames or self.currentFrameIndex == 0:
-            self.animationIncrement = -self.animationIncrement
+        if self.currentFrameIndex == self.maxFrames:
+            self.currentFrameIndex = 0
+        else:
+            self.currentFrameIndex += 1

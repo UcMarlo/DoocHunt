@@ -5,6 +5,7 @@ from Crosshair import Crosshair
 from Duck import Duck
 from Stoper import Stoper
 from DuckHuntSprites import DuckSpriteSetRepository, DuckColor, DogSpriteSetRepository
+from Sound import Sound, Sounds
 
 
 class Game(object):
@@ -17,7 +18,9 @@ class Game(object):
 
         self.display = pygame.display.set_mode((self.SCREEN_WIDTH, self.SCREEN_HEIGHT))
         pygame.display.set_caption("DoocHunt")
+        pygame.mouse.set_visible(False)
         self.stoper = Stoper()
+        self.sound = Sound()
         self.run = True
         self.crosshair = Crosshair(self.display, self.SCREEN_WIDTH, self.SCREEN_HEIGHT)
         self.ducks = []
@@ -34,12 +37,13 @@ class Game(object):
         if event.type == pygame.MOUSEBUTTONDOWN:
             mx, my = pygame.mouse.get_pos()
             print("mouse: ", mx, my)
+            self.sound.play(Sounds.GunShot)
 
     def main_loop(self):
         self.setup_round(1)
         #TODO: prepare scene before main loop
         while self.run:
-            dt = self.stoper
+            self.stoper.newTick()
             self.crosshair.move(pygame.mouse.get_pos())
 
             for event in pygame.event.get():
@@ -60,9 +64,8 @@ class Game(object):
         self.display.fill(black)
 
     def spawn_duck(self):
-        duck = Duck(self.display, self.stoper, (250,250), self.duckSpriteRepository.getCollectionForColor(DuckColor.BROWN))
-        self.ducks.append(duck)
-
+        for x in range(0, 20):
+            self.ducks.append(Duck(self.display, self.stoper, pygame.Vector2(250, 250), self.duckSpriteRepository.getCollectionForColor(DuckColor.BROWN)))
 
     #TODO: theres a good place to setup a state machine - e.g. STARTING_TURN, TURN, WON_TURN, LOST_TURN etc.
     def tick(self):
