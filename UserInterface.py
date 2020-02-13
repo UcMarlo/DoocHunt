@@ -65,7 +65,7 @@ class UserInterface:
             self.wave_count += add
             assert self.ammo >= 0
 
-    def set_to_value(self, set_, value):
+    def set_value(self, set_, value):
         if not isinstance(value, UIValues):
             raise TypeError("Value to add must be UIValues type, not %s" % type(value))
         if not isinstance(set_, int):
