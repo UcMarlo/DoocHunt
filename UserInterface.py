@@ -92,6 +92,9 @@ class UserInterface:
         elif value is UIValues.WAVE_COUNT:
             self.wave = set_
             assert self.ammo >= 0
+        elif value is UIValues.DUCKS_SHOT:
+            self.ducks_shot = set_
+            assert self.ammo >= 0
 
     def render_score(self):
         self.blit_txt('Score: %s' % self.score, (0, 0))

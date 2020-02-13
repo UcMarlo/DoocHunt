@@ -10,7 +10,7 @@ from DuckHuntSprites import DuckAnimationState
 class Duck(GameObject):
 
     #TODO: make it use sprites instead of image
-    def __init__(self, display, stoper, positionVector, spriteMap):
+    def __init__(self, display, stoper, positionVector, spriteMap, level):
         super().__init__(display, stoper, positionVector)
         self.gameDisplay = display
         self.duckState = DuckState.FLYING
@@ -25,7 +25,7 @@ class Duck(GameObject):
         self.animationIntervalInMs = 100
         self.lastAnimationUpdate = 0
         # movement stuff
-        self.movementSpeed = 0.1
+        self.movementSpeed = 0.1 + (0.005 * (level - 1))
         self.angle = 0
         self.setRandomAngle()
         self.lastDirectionChange = 0
@@ -100,7 +100,14 @@ class Duck(GameObject):
         return None
 
     def escaping(self):
-        # TODO: escaping animation - just before changing to edscape
+        self.performTimeSynchronizedMove()
+        w,h = self.gameDisplay.get_size()
+
+        if (self.positionVector.x - self.imageCenterX) < -self.imageCenterX*3 or (self.positionVector.x + self.imageCenterX) > w + (self.imageCenterX*3)\
+                or (self.positionVector.y - self.imageCenterY) < -self.imageCenterY*3 or (self.positionVector.y + self.imageCenterY) > h + (self.imageCenterY*3):
+            self.duckState = DuckState.ESCAPED
+        # TODO: this is hardcoded and looks like p of s
+            self.duckState = DuckState.ESCAPED
         return None
 
     def escaped(self):
@@ -144,7 +151,7 @@ class Duck(GameObject):
         self.setDirectionFromAngle(randint(0, 360))
 
     def setDirectionFromAngle(self, angle):
-        if self.duckState == DuckState.FLYING:
+        if self.duckState == DuckState.FLYING or self.duckState == DuckState.ESCAPING:
             if 80 <= angle <= 100 or 260 <= angle <= 280:
                 self.currentImageSet = self.spriteMap[DuckAnimationState.UP]
                 self.duckAnimationState = DuckAnimationState.UP
@@ -159,6 +166,11 @@ class Duck(GameObject):
         y = math.sin(rads)
         self.directionVector = pygame.Vector2(x, y)
         return None
+
+    def flyAway(self):
+        self.duckState = DuckState.ESCAPING
+        self.movementSpeed = 0.5
+        self.setDirectionFromAngle(randint(250, 290))
 
 class DuckState(Enum):
     FLYING = 0
