@@ -30,8 +30,11 @@ class Duck(GameObject):
         self.setRandomAngle()
         self.lastDirectionChange = 0
         self.flyingDirectionChangeThreshold = randint(1000, 5000)
+        #Quacking
         self.quackingThreshold = randint(1000, 15000)
         self.lastQuacked = 0
+        #State
+        self.lastStateChanged = 0
 
 
     def render(self):
@@ -48,19 +51,27 @@ class Duck(GameObject):
         #TODO: duck can "bounce" of the vertical walls of the screen. I think they might also bounce of, of the other ducks
         if self.duckState == DuckState.FLYING:
             self.flying()
+            return None
 
         if self.duckState == DuckState.DEAD:
             self.dead()
+            return None
 
         if self.duckState == DuckState.SHOT:
             self.shot()
+            return None
 
         if self.duckState == DuckState.ESCAPING:
-            # TODO: while escaping play quackityquacktillion of quacks
             self.escaping()
+            return None
 
         if self.duckState == DuckState.ESCAPED:
             self.escaped()
+            return None
+
+        if self.duckState == DuckState.FALLING:
+            self.falling()
+            return None
 
         return None
 
@@ -82,19 +93,39 @@ class Duck(GameObject):
         return None
 
     def shot(self):
-        # TODO: duck falling animation - just after being hit
+        if self.stoper.getCurrentTicks() - self.lastStateChanged > 500:
+            self.duckState = DuckState.FALLING
+            self.currentImageSet = self.spriteMap[DuckAnimationState.FALLING]
+            self.setDirectionFromAngle(90)
+            self.movementSpeed = 0.15
+            Sound.play(Sounds.Spadanie)
         return None
 
     def escaping(self):
-        # TODO: escaping animation - just before changing to escaped
+        # TODO: escaping animation - just before changing to edscape
         return None
 
     def escaped(self):
         # Terminal status nothing to see here - removes tries
         return None
 
-    def check_for_colision(self):
+    def falling(self):
+        self.performTimeSynchronizedMove()
+        w, h = pygame.display.get_surface().get_size()
+        if self.positionVector.y > h:
+            self.duckState = DuckState.DEAD
+            self.renderable = False
+        return None
 
+    def checkIfShot(self, x, y):
+        if (self.duckState != DuckState.FLYING):
+            return None
+
+        spriteRect = self.image.get_rect().move(self.positionVector)
+        if spriteRect.collidepoint(x, y):
+            self.duckState = DuckState.SHOT
+            self.lastStateChanged = self.stoper.getCurrentTicks()
+            self.currentImageSet = self.spriteMap[DuckAnimationState.HIT]
         return None
 
     def performTimeSynchronizedMove(self):
@@ -114,15 +145,16 @@ class Duck(GameObject):
         self.setDirectionFromAngle(randint(0, 360))
 
     def setDirectionFromAngle(self, angle):
-        if 80 <= angle <= 100 or 260 <= angle <= 280:
-            self.currentImageSet = self.spriteMap[DuckAnimationState.UP]
-            self.duckAnimationState = DuckAnimationState.UP
-        if 0 <= angle <= 30 or 160 <= angle <= 210 or 330 <= angle <= 0:
-            self.currentImageSet = self.spriteMap[DuckAnimationState.HORIZONTAL]
-            self.duckAnimationState = DuckAnimationState.HORIZONTAL
-        if 30 <= angle <= 80 or 110 <= angle <= 150 or 210 <= angle <= 250 or 270 <= angle <= 330:
-            self.currentImageSet = self.spriteMap[DuckAnimationState.DIAGONAL]
-            self.duckAnimationState = DuckAnimationState.DIAGONAL
+        if self.duckState == DuckState.FLYING:
+            if 80 <= angle <= 100 or 260 <= angle <= 280:
+                self.currentImageSet = self.spriteMap[DuckAnimationState.UP]
+                self.duckAnimationState = DuckAnimationState.UP
+            if 0 <= angle <= 30 or 160 <= angle <= 210 or 330 <= angle <= 0:
+                self.currentImageSet = self.spriteMap[DuckAnimationState.HORIZONTAL]
+                self.duckAnimationState = DuckAnimationState.HORIZONTAL
+            if 30 <= angle <= 80 or 110 <= angle <= 150 or 210 <= angle <= 250 or 270 <= angle <= 330:
+                self.currentImageSet = self.spriteMap[DuckAnimationState.DIAGONAL]
+                self.duckAnimationState = DuckAnimationState.DIAGONAL
         rads = math.radians(angle)
         x = math.cos(rads)
         y = math.sin(rads)
@@ -135,3 +167,4 @@ class DuckState(Enum):
     SHOT = 2
     ESCAPING = 3
     ESCAPED = 4
+    FALLING = 5

@@ -38,6 +38,8 @@ class Game(object):
         if event.type == pygame.MOUSEBUTTONDOWN:
             mx, my = pygame.mouse.get_pos()
             print("mouse: ", mx, my)
+            for duck in self.ducks:
+                duck.checkIfShot(mx, my)
             self.sound.play(Sounds.GunShot)
             self.ui.add_to_value(-1, UIValues.AMMO)
 
@@ -58,13 +60,10 @@ class Game(object):
     def render_and_display_frame(self):
         self.render_background()
         self.render_ducks()
+        self.render_bush()
         self.crosshair.render()
         self.ui.render_ui()
         pygame.display.update()
-
-    def render_background(self):
-        black = (80, 80, 130)  # TODO: background
-        self.display.fill(black)
 
     def spawn_duck(self):
         for x in range(0, 20):
@@ -86,9 +85,11 @@ class Game(object):
     def render_background(self):
         blue = (60, 80, 150) #TODO: background
         self.display.fill(blue)
-        rect = self.groundImage.get_rect()
-        self.display.blit(self.groundImage, (0, self.SCREEN_HEIGHT - rect.height ))
         return None
+
+    def render_bush(self):
+        rect = self.groundImage.get_rect()
+        self.display.blit(self.groundImage, (0, self.SCREEN_HEIGHT - rect.height))
 
     class GameState(Enum):
         STARTING = 0
