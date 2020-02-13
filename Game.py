@@ -3,6 +3,8 @@ from enum import Enum
 
 import pygame
 from Crosshair import Crosshair
+from Duck import Duck
+from Dog import Dog
 from Duck import Duck, DuckState
 from Stoper import Stoper
 from DuckHuntSprites import DuckSpriteSetRepository, DuckColor, DogSpriteSetRepository
@@ -31,10 +33,12 @@ class Game(object):
         self.tree = pygame.image.load("images/tree.png")
         self.duckSpriteRepository = DuckSpriteSetRepository()
         self.dogSpriteSetRepository = DogSpriteSetRepository()
-        self.gameState = GameState.ROUND_STARTING
+        self.gameState = GameState.GAME_STARTING
         self.level = 1
         self.ammoCount = self.level + 2
         self.duckCount = self.level + 1
+        self.dog = Dog(self.display, self.stoper, self.dogSpriteSetRepository.getCollection())
+
 
     # TODO: it looks awful, is there a good looking switch case?
     def __handle_event(self, event):
@@ -52,7 +56,6 @@ class Game(object):
                         self.ui.add_to_value(500*self.level, UIValues.SCORE)
 
     def main_loop(self):
-        #TODO: prepare scene before main loop
         while self.run:
             self.stoper.newTick()
             self.crosshair.move(pygame.mouse.get_pos())
@@ -80,6 +83,7 @@ class Game(object):
         self.render_background()
         self.render_ducks()
         self.render_bush()
+        self.dog.render()
         self.crosshair.render()
         self.ui.render_ui()
         pygame.display.update()
@@ -119,7 +123,9 @@ class Game(object):
 # state impementations
 
     def game_starting(self):
-        # Dog sniffing animation
+        self.dog.tick()
+        if self.dog.finishedMovement:
+            self.gameState = GameState.ACTIVE_GAME
         pass
 
     def round_starting(self):

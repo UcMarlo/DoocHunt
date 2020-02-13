@@ -94,7 +94,8 @@ class DogSpriteSetRepository(object):
         collection = []
         for i in range(1, imageCount + 1):
             filePath = "images/dog/" + dogAnimationSet.value + "_" + str(i) + ".gif"
-            collection.append(pygame.image.load(filePath).convert())
+            img = pygame.image.load(filePath).convert()
+            collection.append(img)
         return collection
     
     # TODO: make it blit images for
