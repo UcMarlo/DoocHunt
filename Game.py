@@ -6,7 +6,7 @@ from Duck import Duck
 from Stoper import Stoper
 from DuckHuntSprites import DuckSpriteSetRepository, DuckColor, DogSpriteSetRepository
 from Sound import Sound, Sounds
-
+from UserInterface import UIValues, UserInterface
 
 class Game(object):
 
@@ -21,6 +21,7 @@ class Game(object):
         pygame.mouse.set_visible(False)
         self.stoper = Stoper()
         self.sound = Sound()
+        self.ui = UserInterface(self.display)
         self.run = True
         self.crosshair = Crosshair(self.display, self.SCREEN_WIDTH, self.SCREEN_HEIGHT)
         self.ducks = []
@@ -38,6 +39,7 @@ class Game(object):
             mx, my = pygame.mouse.get_pos()
             print("mouse: ", mx, my)
             self.sound.play(Sounds.GunShot)
+            self.ui.add_to_value(-1, UIValues.AMMO)
 
     def main_loop(self):
         self.setup_round(1)
@@ -57,6 +59,7 @@ class Game(object):
         self.render_background()
         self.render_ducks()
         self.crosshair.render()
+        self.ui.render_ui()
         pygame.display.update()
 
     def render_background(self):
@@ -95,5 +98,6 @@ class Game(object):
         GAME_END = 4
 
     def setup_round(self, level):
+        self.ui.add_to_value(5, UIValues.AMMO)
         self.spawn_duck()
         return None
