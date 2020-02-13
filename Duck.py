@@ -36,7 +36,6 @@ class Duck(GameObject):
         #State
         self.lastStateChanged = 0
 
-
     def render(self):
         if (self.renderable):
             horizontalFlip = self.directionVector.x < 0
@@ -97,7 +96,7 @@ class Duck(GameObject):
             self.currentImageSet = self.spriteMap[DuckAnimationState.FALLING]
             self.setDirectionFromAngle(90)
             self.movementSpeed = 0.15
-            Sound.play(Sounds.Spadanie)
+            Sound.play(Sounds.Falling)
         return None
 
     def escaping(self):

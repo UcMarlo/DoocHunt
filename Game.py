@@ -81,7 +81,12 @@ class Game(object):
 
     def spawn_duck(self):
         for x in range(0, 20):
-            self.ducks.append(Duck(self.display, self.stoper, pygame.Vector2(250, 250), self.duckSpriteRepository.getCollectionForColor(DuckColor.BROWN)))
+            self.ducks.append(Duck(
+                self.display,
+                self.stoper,
+                pygame.Vector2(250, 250),
+                self.duckSpriteRepository.getCollectionForColor(DuckColor.BROWN),
+                self.ui))
 
     def render_ducks(self):
         for duck in self.ducks:

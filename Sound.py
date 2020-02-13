@@ -9,7 +9,7 @@ class Sounds(Enum):
     Loser = ['sounds/dog_sniff.wav', 3]
     Porazka = ['sounds/porazka.wav', 4]
     QuackReal = ['sounds/quack_real.wav', 5]
-    Spadanie = ['sounds/spadanie.wav', 6]
+    Falling = ['sounds/spadanie.wav', 6]
     Szczek = ['sounds/szczek.wav', 7]
     SzczekTwo = ['sounds/szczek2.wav', 8]
     WallHit = ['sounds/wallhit.wav', 9]
