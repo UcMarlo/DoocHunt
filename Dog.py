@@ -1,7 +1,5 @@
 import pygame
-import math
 from enum import Enum
-from random import randint
 from Sound import Sound,Sounds
 
 from GameObject import GameObject
@@ -22,7 +20,7 @@ class Dog(GameObject):
         self.lastAnimationUpdate = 0
         self.finishedMovement = False
         # movement stuff
-        self.movementSpeed = 3
+        self.movementSpeed = 2
         self.renderable = True
 
     def render(self):
@@ -59,13 +57,15 @@ class Dog(GameObject):
 
     def sniffing(self):
         self.positionVector.x += self.movementSpeed
+        Sound.play(Sounds.DogSniff)
         if self.positionVector.x > 300:
+            Sound.play(Sounds.SzczekTwo)
             self.dogState = DogState.JUMPING
             self.currentImageSet = self.spriteMap[DogAnimationState.JUMP]
         return None
 
     def jumping(self):
-        self.positionVector.y -= self.movementSpeed * 4
+        self.positionVector.y -= 12
         self.positionVector.x += self.movementSpeed
         if self.positionVector.y < (600-200):
             self.dogState = DogState.HIDDEN
