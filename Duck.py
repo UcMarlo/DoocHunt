@@ -89,7 +89,6 @@ class Duck(GameObject):
             self.lastQuacked = self.stoper.getCurrentTicks()
 
     def dead(self):
-        # Terminal status nothing to see here - grants points
         return None
 
     def shot(self):
@@ -119,14 +118,15 @@ class Duck(GameObject):
 
     def checkIfShot(self, x, y):
         if (self.duckState != DuckState.FLYING):
-            return None
+            return False
 
         spriteRect = self.image.get_rect().move(self.positionVector)
         if spriteRect.collidepoint(x, y):
             self.duckState = DuckState.SHOT
             self.lastStateChanged = self.stoper.getCurrentTicks()
             self.currentImageSet = self.spriteMap[DuckAnimationState.HIT]
-        return None
+            return True
+        return False
 
     def performTimeSynchronizedMove(self):
         self.positionVector.x += self.movementSpeed * self.stoper.getDetla() * self.directionVector.x
