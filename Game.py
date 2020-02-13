@@ -34,23 +34,15 @@ class Game(object):
         self.duckSpriteRepository = DuckSpriteSetRepository()
         self.dogSpriteSetRepository = DogSpriteSetRepository()
         self.gameState = GameState.GAME_STARTING
+        self.dog = Dog(self.display, self.stoper, self.dogSpriteSetRepository.getCollection())
         self.level = 1
         self.ammoCount = self.level + 2
         self.duckCount = self.level + 1
-        self.dog = Dog(self.display, self.stoper, self.dogSpriteSetRepository.getCollection())
-        self.level = 1
 
     def __handle_event(self, event):
         if event.type == pygame.QUIT:
             self.run = False
         if event.type == pygame.MOUSEBUTTONDOWN:
-            mx, my = pygame.mouse.get_pos()
-            for duck in self.ducks:
-                if duck.checkIfShot(mx, my):
-                    self.ui.add_to_value(1, UIValues.DUCKS_SHOT)
-                    self.ui.add_to_value(500*self.level, UIValues.SCORE)
-            self.sound.play(Sounds.GunShot)
-            self.ui.add_to_value(-1, UIValues.AMMO)
             if self.gameState == GameState.ACTIVE_GAME:
                 mx, my = pygame.mouse.get_pos()
                 self.sound.play(Sounds.GunShot)
