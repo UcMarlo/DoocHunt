@@ -8,6 +8,7 @@ from DuckHuntSprites import DuckSpriteSetRepository, DuckColor, DogSpriteSetRepo
 from Sound import Sound, Sounds
 from UserInterface import UIValues, UserInterface
 
+
 class Game(object):
 
     def __init__(self):
@@ -50,19 +51,19 @@ class Game(object):
         while self.run:
             self.stoper.newTick()
             self.crosshair.move(pygame.mouse.get_pos())
-            if (self.gameState == GameState.GAME_STARTING):
+            if self.gameState == GameState.GAME_STARTING:
                 self.game_starting()
 
-            if(self.gameState == GameState.ROUND_STARTING):
+            if self.gameState == GameState.ROUND_STARTING:
                 self.round_starting()
 
-            if (self.gameState == GameState.ACTIVE_GAME):
+            if self.gameState == GameState.ACTIVE_GAME:
                 self.active_game()
 
-            if (self.gameState == GameState.ROUND_END):
+            if self.gameState == GameState.ROUND_END:
                 self.round_end()
 
-            if (self.gameState == GameState.GAME_END):
+            if self.gameState == GameState.GAME_END:
                 self.game_end()
 
             self.render_and_display_frame()
