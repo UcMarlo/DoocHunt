@@ -22,6 +22,7 @@ class Dog(GameObject):
         # movement stuff
         self.movementSpeed = 2
         self.renderable = True
+        self.start = True
 
     def render(self):
         if self.renderable:
@@ -30,6 +31,9 @@ class Dog(GameObject):
 
     def tick(self):
         super().tick()
+        if self.start:
+            Sound.play(Sounds.DogSniff)
+            self.start = False
 
         if self.dogState == DogState.SNIFFING:
             self.sniffing()
@@ -57,7 +61,6 @@ class Dog(GameObject):
 
     def sniffing(self):
         self.positionVector.x += self.movementSpeed
-        Sound.play(Sounds.DogSniff)
         if self.positionVector.x > 300:
             Sound.play(Sounds.SzczekTwo)
             self.dogState = DogState.JUMPING
