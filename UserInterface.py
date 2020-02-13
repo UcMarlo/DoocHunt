@@ -106,7 +106,7 @@ class UserInterface:
         self.blit_txt('Ammo: %s' % self.ammo, (0, self.height-46))
 
     def render_duck_values(self):
-        self.blit_txt('Ducks shot: %s out of %s total' % (self.ducks_shot, self.ducks_shot), (0, self.height-15))
+        self.blit_txt('Ducks shot: %s out of %s total' % (self.ducks_shot, self.ducks_in_round), (0, self.height-15))
         self.blit_txt('Ducks flew: %s' % self.ducks_flew, (0, self.height-31))
 
     def blit_txt(self, txt, position):

@@ -2,7 +2,7 @@ import pygame
 import math
 from enum import Enum
 from random import randint
-from Sound import Sound,Sounds
+from Sound import Sound, Sounds
 
 from GameObject import GameObject
 from DuckHuntSprites import DuckAnimationState

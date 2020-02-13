@@ -31,7 +31,7 @@ class Game(object):
         self.duckSpriteRepository = DuckSpriteSetRepository()
         self.dogSpriteSetRepository = DogSpriteSetRepository()
         self.gameState = GameState.ACTIVE_GAME
-
+        self.level = 1
 
     # TODO: it looks awful, is there a good looking switch case?
     def __handle_event(self, event):
@@ -39,14 +39,15 @@ class Game(object):
             self.run = False
         if event.type == pygame.MOUSEBUTTONDOWN:
             mx, my = pygame.mouse.get_pos()
-            print("mouse: ", mx, my)
             for duck in self.ducks:
-                duck.checkIfShot(mx, my)
+                if duck.checkIfShot(mx, my):
+                    self.ui.add_to_value(1, UIValues.DUCKS_SHOT)
+                    self.ui.add_to_value(500*self.level, UIValues.SCORE)
             self.sound.play(Sounds.GunShot)
             self.ui.add_to_value(-1, UIValues.AMMO)
 
     def main_loop(self):
-        self.setup_round(1)
+        self.setup_round()
         #TODO: prepare scene before main loop
         while self.run:
             self.stoper.newTick()
@@ -79,14 +80,14 @@ class Game(object):
         self.ui.render_ui()
         pygame.display.update()
 
-    def spawn_duck(self):
-        for x in range(0, 20):
+    def spawn_duck(self, ducks):
+        for _ in range(ducks):
             self.ducks.append(Duck(
                 self.display,
                 self.stoper,
                 pygame.Vector2(250, 250),
-                self.duckSpriteRepository.getCollectionForColor(DuckColor.BROWN),
-                self.ui))
+                self.duckSpriteRepository.getCollectionForColor(DuckColor.BROWN)))
+        self.ui.set_value(ducks, UIValues.DUCKS_IN_ROUND)
 
     def render_ducks(self):
         for duck in self.ducks:
@@ -101,9 +102,10 @@ class Game(object):
         rect = self.groundImage.get_rect()
         self.display.blit(self.groundImage, (0, self.SCREEN_HEIGHT - rect.height))
 
-    def setup_round(self, level):
-        self.ui.add_to_value(5, UIValues.AMMO)
-        self.spawn_duck()
+    def setup_round(self):
+        self.ui.set_value(self.level, UIValues.ROUND)
+        self.ui.add_to_value(50, UIValues.AMMO)
+        self.spawn_duck(2)
         return None
 
 # state impementations
@@ -119,7 +121,8 @@ class Game(object):
     def active_game(self):
         for duck in self.ducks:
             duck.tick()
-        return None
+        if (self.ui.ammo == 0) or (self.ui.ducks_shot == self.ui.ducks_in_round):  # or timeout
+            self.gameState = GameState.GAME_END
 
     def round_end(self):
         # Dog laughing/happy animation
@@ -127,7 +130,8 @@ class Game(object):
 
     def game_end(self):
         # game end and none is happy
-        pass
+        print("Koniec gry")
+        assert False
 
 
 class GameState(Enum):
