@@ -27,7 +27,7 @@ class UserInterface:
         self.font = pygame.font.Font('freesansbold.ttf', 16)
         self.display = display
         self.width, self.height = self.display.get_size()
-        self.txt_color = pygame.Color('red')
+        self.txt_color = pygame.Color('white')
 
     def set_txt_color(self, color):
         if isinstance(color, pygame.Color):
@@ -97,10 +97,17 @@ class UserInterface:
         self.blit_txt('Score: %s' % self.score, (0, 0))
 
     def render_wave(self):
-        self.blit_txt('Wave %s of %s' % (self.wave, self.wave_count), (120, 200))
+        self.blit_txt('Wave %s of %s' % (self.wave, self.wave_count), (self.width-110, self.height-15))
 
     def render_round(self):
-        self.blit_txt('Round: %s' % self.round, (200, 120))
+        self.blit_txt('Round: %s' % self.round, (self.width-93, self.height-31))
+
+    def render_ammo(self):
+        self.blit_txt('Ammo: %s' % self.ammo, (0, self.height-46))
+
+    def render_duck_values(self):
+        self.blit_txt('Ducks shot: %s out of %s total' % (self.ducks_shot, self.ducks_shot), (0, self.height-15))
+        self.blit_txt('Ducks flew: %s' % self.ducks_flew, (0, self.height-31))
 
     def blit_txt(self, txt, position):
         text = self.font.render(txt,
@@ -112,3 +119,5 @@ class UserInterface:
         self.render_score()
         self.render_wave()
         self.render_round()
+        self.render_ammo()
+        self.render_duck_values()
