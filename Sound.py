@@ -13,6 +13,8 @@ class Sounds(Enum):
     Szczek = ['sounds/szczek.wav', 7]
     SzczekTwo = ['sounds/szczek2.wav', 8]
     WallHit = ['sounds/wallhit.wav', 9]
+    Laugh = ['sound/laugh.wav', 10]
+    Nice = ['sound/nice.wav', 11]
 
 
 class Sound:
