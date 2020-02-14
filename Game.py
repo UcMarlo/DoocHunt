@@ -3,7 +3,6 @@ from enum import Enum
 
 import pygame
 from Crosshair import Crosshair
-from Duck import Duck
 from Dog import Dog
 from Duck import Duck, DuckState
 from Stoper import Stoper
@@ -11,6 +10,7 @@ from DuckHuntSprites import DuckSpriteSetRepository, DuckColor, DogSpriteSetRepo
 from Sound import Sound, Sounds
 from UserInterface import UIValues, UserInterface
 from random import randint
+
 
 class Game(object):
 
@@ -144,6 +144,7 @@ class Game(object):
         for duck in self.ducks:
             if duck.duckState == DuckState.FLYING:
                 duck.flyAway()
+                self.ui.add_to_value(1, UIValues.DUCKS_FLEW)
             duck.tick()
 
         if all(duck.duckState == DuckState.ESCAPED or duck.duckState == DuckState.DEAD for duck in self.ducks):

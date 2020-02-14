@@ -100,10 +100,10 @@ class UserInterface:
         self.blit_txt('Score: %s' % self.score, (0, 0))
 
     def render_wave(self):
-        self.blit_txt('Wave %s of %s' % (self.wave, self.wave_count), (self.width-110, self.height-15))
+        self.blit_txt('Wave %s of %s' % (self.wave, self.wave_count), (self.width-110, self.height-31))
 
     def render_round(self):
-        self.blit_txt('Round: %s' % self.round, (self.width-93, self.height-31))
+        self.blit_txt('Round: %s' % self.round, (self.width-93, self.height-15))
 
     def render_ammo(self):
         self.blit_txt('Ammo: %s' % self.ammo, (0, self.height-46))
@@ -120,7 +120,7 @@ class UserInterface:
 
     def render_ui(self):
         self.render_score()
-        self.render_wave()
+        # self.render_wave()
         self.render_round()
         self.render_ammo()
         self.render_duck_values()
