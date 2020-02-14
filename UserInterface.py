@@ -24,7 +24,7 @@ class UserInterface:
         self.ammo = 0
         self.wave = 0
         self.wave_count = 0
-        self.font = pygame.font.Font('freesansbold.ttf', 16)
+        self.font = pygame.font.Font(None, 16)
         self.display = display
         self.width, self.height = self.display.get_size()
         self.txt_color = pygame.Color('white')
