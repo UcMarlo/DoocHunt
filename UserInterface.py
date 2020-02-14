@@ -1,5 +1,6 @@
 import pygame
 from enum import IntEnum
+import os
 
 
 class UIValues(IntEnum):
@@ -24,7 +25,7 @@ class UserInterface:
         self.ammo = 0
         self.wave = 0
         self.wave_count = 0
-        self.font = pygame.font.Font('FreeSansBold.ttf', 16)
+        self.font = pygame.font.Font('images/FreeSansBold.ttf', 16)
         self.display = display
         self.width, self.height = self.display.get_size()
         self.txt_color = pygame.Color('white')
