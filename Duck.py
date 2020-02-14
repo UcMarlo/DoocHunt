@@ -116,6 +116,7 @@ class Duck(GameObject):
 
     def falling(self):
         self.performTimeSynchronizedMove()
+        self.movementSpeed = self.movementSpeed + (0.001 * self.stoper.getDetla())
         w, h = pygame.display.get_surface().get_size()
         if self.positionVector.y > h:
             self.duckState = DuckState.DEAD
