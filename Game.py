@@ -3,7 +3,7 @@ from enum import Enum
 
 import pygame
 from Crosshair import Crosshair
-from Dog import Dog
+from Dog import Dog, DogState
 from Duck import Duck, DuckState
 from Stoper import Stoper
 from DuckHuntSprites import DuckSpriteSetRepository, DuckColor, DogSpriteSetRepository
@@ -71,6 +71,9 @@ class Game(object):
 
             if self.gameState == GameState.GAME_END:
                 self.game_end()
+
+            if self.gameState == GameState.DOG_ANIMATION:
+                self.dog_animation()
 
             self.render_and_display_frame()
             for event in pygame.event.get():
@@ -148,13 +151,31 @@ class Game(object):
             duck.tick()
 
         if all(duck.duckState == DuckState.ESCAPED or duck.duckState == DuckState.DEAD for duck in self.ducks):
-            self.gameState = GameState.ROUND_STARTING
+
+            if self.level == 0:
+                self.gameState = GameState.ROUND_STARTING
+            else:
+                escaped_ducks = 0
+                for duck in self.ducks:
+                    if duck.duckState == DuckState.ESCAPED:
+                        escaped_ducks += 1
+
+                if escaped_ducks > 0:
+                    self.dog.dogState = DogState.LAUGHING
+                    self.gameState = GameState.DOG_ANIMATION
+                else:
+                    self.dog.dogState = DogState.HOLD_TWO
+                    self.gameState = GameState.DOG_ANIMATION
             self.level += 1
         pass
 
     def game_end(self):
         assert False
 
+    def dog_animation(self):
+        self.dog.tick()
+        if self.dog.have_finished_movement():
+            self.gameState = GameState.ROUND_STARTING
 
 class GameState(Enum):
     GAME_STARTING = 0
@@ -162,3 +183,4 @@ class GameState(Enum):
     ACTIVE_GAME = 2
     ROUND_END = 3
     GAME_END = 4
+    DOG_ANIMATION = 5
