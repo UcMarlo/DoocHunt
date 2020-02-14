@@ -23,6 +23,9 @@ class Dog(GameObject):
         self.movementSpeed = 2
         self.renderable = True
         self.start = True
+        self.laughing_init = True
+        self.hold_two_init = True
+        self.timeStarted = 0
 
     def render(self):
         if self.renderable:
@@ -83,9 +86,35 @@ class Dog(GameObject):
         return None
 
     def holdtwo(self):
+        if self.hold_two_init:
+            self.timeStarted = self.stoper.getCurrentTicks()
+            self.finishedMovement = False
+            self.renderable = True
+            self.positionVector.x = DogConsts.DOG_CENTER_X.value
+            self.positionVector.y = DogConsts.DOG_CENTER_Y.value
+            self.currentImageSet = self.spriteMap[DogAnimationState.HOLD_TWO]
+            self.forceChangeAnimationFrame()
+            self.hold_two_init = False
+        if (self.stoper.getCurrentTicks()-self.timeStarted) > DogConsts.DOG_STATE_ON.value:
+            self.hold_two_init = True
+            self.dogState = DogState.HIDDEN
+        return None
+
         return None
 
     def laughing(self):
+        if self.laughing_init:
+            self.timeStarted = self.stoper.getCurrentTicks()
+            self.finishedMovement = False
+            self.renderable = True
+            self.positionVector.x = DogConsts.DOG_CENTER_X.value
+            self.positionVector.y = DogConsts.DOG_CENTER_Y.value
+            self.currentImageSet = self.spriteMap[DogAnimationState.LAUGHING]
+            self.forceChangeAnimationFrame()
+            self.laughing_init = False
+        if (self.stoper.getCurrentTicks()-self.timeStarted) > DogConsts.DOG_STATE_ON.value:
+            self.laughing_init = True
+            self.dogState = DogState.HIDDEN
         return None
 
     def have_finished_movement(self):
@@ -99,3 +128,9 @@ class DogState(Enum):
     HOLD_ONE = 3
     HOLD_TWO = 4
     LAUGHING = 5
+
+
+class DogConsts(Enum):
+    DOG_CENTER_X = 800 / 2 - 50
+    DOG_CENTER_Y = 600 / 2 - 50
+    DOG_STATE_ON = 2000

@@ -28,3 +28,8 @@ class GameObject(object):
             self.currentImageSet.nextFrame()
             self.lastAnimationUpdate = self.stoper.getCurrentTicks()
             self.image = self.currentImageSet.getFrame()
+
+    def forceChangeAnimationFrame(self):
+        self.currentImageSet.nextFrame()
+        self.lastAnimationUpdate = self.stoper.getCurrentTicks()
+        self.image = self.currentImageSet.getFrame()
