@@ -35,7 +35,7 @@ class Game(object):
         self.dogSpriteSetRepository = DogSpriteSetRepository()
         self.gameState = GameState.GAME_STARTING
         self.dog = Dog(self.display, self.stoper, self.dogSpriteSetRepository.getCollection())
-        self.level = 1
+        self.level = 0
         self.ammoCount = self.level + 2
         self.duckCount = self.level + 1
 
